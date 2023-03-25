@@ -1,0 +1,85 @@
+#include <stdarg.h>
+#include <stdio.h>
+
+/**
+ * _printf - Custom printf function
+ * @format: Format string
+ *
+ * Return: Number of characters printed
+ */
+int _printf(const char *format, ...)
+{
+	va_list args;
+	int printed_chars = 0;
+	int precision;
+
+	va_start(args, format);
+
+	while (*format)
+	{
+		if (*format == '%')
+		{
+			format++;
+			precision = -1;
+
+			if (*format == '.')
+			{
+				format++;
+				precision = 0;
+				while (*format >= '0' && *format <= '9')
+				{
+					precision = precision * 10 + (*format - '0');
+					format++;
+				}
+			}
+
+			switch (*format)
+			{
+				case 's':
+					printed_chars += handle_string(args, precision);
+					break;
+
+				/* Handle other conversion specifiers here */
+			}
+		}
+		else
+		{
+			putchar(*format);
+			printed_chars++;
+		}
+		format++;
+	}
+
+	va_end(args);
+	return (printed_chars);
+}
+
+/**
+ * handle_string - Handle the %s conversion specifier
+ * @args: List of arguments
+ * @precision: The precision value
+ *
+ * Return: Number of characters printed
+ */
+int handle_string(va_list args, int precision)
+{
+	char *str = va_arg(args, char *);
+	int i;
+
+	if (str == NULL)
+		str = "(null)";
+
+	if (precision == -1)
+	{
+		/* Print the whole string */
+		printf("%s", str);
+		return (strlen(str));
+	}
+	else
+	{
+		/* Print the string up to the given precision */
+		for (i = 0; str[i] && i < precision; i++)
+			putchar(str[i]);
+		return (i);
+	}
+}

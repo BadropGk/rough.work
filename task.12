@@ -1,0 +1,85 @@
+/**
+ * print_number_left_justified - prints a number left-justified with padding
+ * @n: the number to print
+ * @padding: the number of padding characters to add after the number
+ *
+ * Return: the number of characters printed
+ */
+int print_number_left_justified(int n, int padding)
+{
+    int chars_printed = 0;
+
+    if (n < 0) {
+        chars_printed += _putchar('-');
+        n *= -1;
+    }
+
+    chars_printed += print_number(n);
+
+    while (chars_printed < padding) {
+        chars_printed += _putchar(' ');
+    }
+
+    return chars_printed;
+}
+
+/**
+ * print_number - prints a number without any padding or sign
+ * @n: the number to print
+ *
+ * Return: the number of characters printed
+ */
+int print_number(int n)
+{
+    int chars_printed = 0;
+
+    if (n / 10) {
+        chars_printed += print_number(n / 10);
+    }
+
+    chars_printed += _putchar(n % 10 + '0');
+
+    return chars_printed;
+}
+
+/**
+ * _printf - prints a formatted string to the standard output stream
+ * @format: the format string
+ * @...: the variadic arguments
+ *
+ * Return: the number of characters printed
+ */
+int _printf(const char *format, ...)
+{
+    va_list args;
+    int chars_printed = 0, padding = 0;
+
+    va_start(args, format);
+
+    while (*format) {
+        if (*format == '%') {
+            format++;
+
+            if (*format == '-') {
+                format++;
+                padding = va_arg(args, int);
+            }
+
+            if (*format == 'd' || *format == 'i') {
+                chars_printed += print_number_left_justified(va_arg(args, int), padding);
+                padding = 0;
+            } else {
+                // handle other conversion specifiers here
+            }
+        } else {
+            chars_printed += _putchar(*format);
+        }
+
+        format++;
+    }
+
+    va_end(args);
+
+    return chars_printed;
+}
+

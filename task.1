@@ -1,0 +1,47 @@
+#include <stdarg.h>
+#include <stdio.h>
+
+/**
+ * _printf - print output according to a format
+ * @format: format string
+ *
+ * Return: number of characters printed (excluding null byte used to end output to strings)
+ */
+int _printf(const char *format, ...)
+{
+    va_list args;
+    int count = 0;
+    char c;
+
+    va_start(args, format);
+
+    while ((c = *format++) != '\0')
+    {
+        if (c == '%')
+        {
+            c = *format++;
+            if (c == 'd' || c == 'i')
+            {
+                int arg = va_arg(args, int);
+                count += printf("%d", arg);
+            }
+            else if (c == 's')
+            {
+                char *arg = va_arg(args, char *);
+                count += printf("%s", arg);
+            }
+            else if (c == '%')
+            {
+                count += putchar('%');
+            }
+        }
+        else
+        {
+            count += putchar(c);
+        }
+    }
+
+    va_end(args);
+
+    return count;
+}

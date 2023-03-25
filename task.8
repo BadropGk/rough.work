@@ -1,0 +1,125 @@
+#include "holberton.h"
+#include <stdarg.h>
+
+/**
+ * print_number - prints an integer of any length
+ * @n: integer to print
+ *
+ * Return: number of digits printed
+ */
+int print_number(long int n)
+{
+	unsigned int m;
+	int i, chars_printed = 0;
+
+	if (n < 0)
+	{
+		_putchar('-');
+		chars_printed++;
+		m = -n;
+	}
+	else
+	{
+		m = n;
+	}
+	if (m / 10)
+	{
+		chars_printed += print_number(m / 10);
+	}
+	i = m % 10 + '0';
+	_putchar(i);
+	chars_printed++;
+	return (chars_printed);
+}
+
+/**
+ * print_unsigned_number - prints an unsigned integer of any length
+ * @n: unsigned integer to print
+ *
+ * Return: number of digits printed
+ */
+int print_unsigned_number(unsigned long int n)
+{
+	unsigned int m;
+	int i, chars_printed = 0;
+
+	if (n / 10)
+	{
+		chars_printed += print_unsigned_number(n / 10);
+	}
+	i = n % 10 + '0';
+	_putchar(i);
+	chars_printed++;
+	return (chars_printed);
+}
+
+/**
+ * _printf - prints a formatted string
+ * @format: string containing zero or more directives
+ *
+ * Return: number of characters printed
+ */
+int _printf(const char *format, ...)
+{
+	int i, chars_printed = 0, width = 0;
+	va_list arg;
+	char *s;
+
+	va_start(arg, format);
+
+	for (i = 0; format[i] != '\0'; i++)
+	{
+		if (format[i] == '%')
+		{
+			i++;
+			while (format[i] >= '0' && format[i] <= '9')
+			{
+				width = width * 10 + (format[i] - '0');
+				i++;
+			}
+			if (format[i] == 'd' || format[i] == 'i')
+			{
+				chars_printed += print_number(va_arg(arg, int));
+			}
+			else if (format[i] == 'u')
+			{
+				chars_printed += print_unsigned_number(va_arg(arg, unsigned int));
+			}
+			else if (format[i] == 'o')
+			{
+				unsigned int octal = va_arg(arg, unsigned int);
+				unsigned int remainder, quotient;
+				int j, octal_array[1000];
+
+				quotient = octal;
+				j = 0;
+				while (quotient != 0)
+				{
+					octal_array[j++] = quotient % 8;
+					quotient = quotient / 8;
+				}
+				for (j = j - 1; j >= 0; j--)
+				{
+					_putchar(octal_array[j] + '0');
+					chars_printed++;
+				}
+			}
+			else if (format[i] == 'x')
+			{
+				unsigned int hex = va_arg(arg, unsigned int);
+				unsigned int remainder, quotient;
+				int j, hex_array[1000];
+
+				quotient = hex;
+				j = 0;
+				while (quotient != 0)
+				{
+					remainder = quotient % 16;
+					if (remainder < 10)
+					{
+						hex_array[j++] = 48 + remainder;
+					}
+					else
+					{
+						hex_array[j++] = 87 + remainder;
+					}

@@ -1,0 +1,124 @@
+#include "holberton.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+
+/**
+ * print_number - helper function to print a number
+ * @n: the number to print
+ * Return: the number of digits printed
+ */
+int print_number(unsigned int n)
+{
+    unsigned int divisor = 1, digit, count = 0;
+
+    while (n / divisor >= 10)
+        divisor *= 10;
+
+    while (divisor > 0)
+    {
+        digit = (n / divisor) % 10;
+        _putchar(digit + '0');
+        divisor /= 10;
+        count++;
+    }
+    return (count);
+}
+
+/**
+ * _printf - prints formatted output to stdout
+ * @format: format string containing conversion specifiers
+ *
+ * Return: number of characters printed
+ */
+int _printf(const char *format, ...)
+{
+    va_list args;
+    int count = 0;
+    char *str_arg;
+    unsigned int uint_arg;
+    int int_arg;
+    char ch;
+    int width;
+
+    va_start(args, format);
+    while (*format)
+    {
+        if (*format == '%')
+        {
+            format++;
+            width = 0;
+            if (*format >= '0' && *format <= '9')
+            {
+                while (*format >= '0' && *format <= '9')
+                {
+                    width = width * 10 + (*format - '0');
+                    format++;
+                }
+            }
+            switch (*format)
+            {
+                case 's':
+                    str_arg = va_arg(args, char *);
+                    if (!str_arg)
+                        str_arg = "(null)";
+                    while (*str_arg)
+                    {
+                        _putchar(*str_arg);
+                        str_arg++;
+                        count++;
+                        if (width > 0)
+                            width--;
+                    }
+                    break;
+                case 'd':
+                case 'i':
+                    int_arg = va_arg(args, int);
+                    if (int_arg < 0)
+                    {
+                        _putchar('-');
+                        count++;
+                        uint_arg = -int_arg;
+                    }
+                    else
+                        uint_arg = int_arg;
+                    count += print_number(uint_arg);
+                    break;
+                case 'u':
+                    uint_arg = va_arg(args, unsigned int);
+                    count += print_number(uint_arg);
+                    break;
+                case 'o':
+                    uint_arg = va_arg(args, unsigned int);
+                    printf("%o", uint_arg);
+                    break;
+                case 'x':
+                    uint_arg = va_arg(args, unsigned int);
+                    printf("%x", uint_arg);
+                    break;
+                case 'X':
+                    uint_arg = va_arg(args, unsigned int);
+                    printf("%X", uint_arg);
+                    break;
+                case 'c':
+                    ch = va_arg(args, int);
+                    _putchar(ch);
+                    count++;
+                    break;
+                default:
+                    _putchar('%');
+                    _putchar(*format);
+                    count += 2;
+                    break;
+            }
+        }
+        else
+        {
+            _putchar(*format);
+            count++;
+        }
+        format++;
+    }
+    va_end(args);
+    return (count);
+}

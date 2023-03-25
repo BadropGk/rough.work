@@ -1,0 +1,31 @@
+/**
+ * _print_number - Prints an integer.
+ * @n: The integer to print.
+ * @pad: The padding character to use.
+ * @width: The minimum width of the printed number.
+ * @negative: Whether the number is negative.
+ *
+ * Return: The number of characters printed.
+ */
+int _print_number(int n, char pad, int width, int negative)
+{
+        unsigned int num = n;
+        int printed = 0;
+
+        if (negative)
+                num = -n;
+
+        if (num / 10)
+                printed += _print_number(num / 10, pad, width - 1, negative);
+
+        printed += _putchar(num % 10 + '0');
+
+        if (width > 0 && width > num_digits(num))
+        {
+                int padding = width - num_digits(num);
+                while (padding--)
+                        printed += _putchar(pad);
+        }
+
+        return (printed);
+}

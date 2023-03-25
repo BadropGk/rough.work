@@ -1,0 +1,52 @@
+#include "holberton.h"
+#include <stdarg.h>
+
+/**
+ * _rev_string - Reverses a string.
+ * @str: The string to be reversed.
+ *
+ * Return: A pointer to the reversed string.
+ */
+char *_rev_string(char *str)
+{
+        int i, j;
+        char tmp;
+
+        for (j = 0; str[j] != '\0'; j++)
+                continue;
+
+        for (i = 0, j--; i < j; i++, j--)
+        {
+                tmp = str[i];
+                str[i] = str[j];
+                str[j] = tmp;
+        }
+
+        return (str);
+}
+
+/**
+ * print_r - Prints a string in reverse.
+ * @args: A va_list containing the string to be printed.
+ *
+ * Return: The number of characters printed.
+ */
+int print_r(va_list args)
+{
+        char *str = va_arg(args, char *);
+        int len = 0;
+
+        if (str == NULL)
+                str = "(null)";
+
+        str = _rev_string(str);
+
+        while (*str)
+        {
+                len += _putchar(*str);
+                str++;
+        }
+
+        return (len);
+}
+

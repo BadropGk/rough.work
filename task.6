@@ -1,0 +1,17 @@
+#include "holberton.h"
+
+/**
+ * print_pointer - prints the memory address of a pointer in hexadecimal format
+ * @args: list of arguments
+ *
+ * Return: number of characters printed
+ */
+int print_pointer(va_list args)
+{
+    void *p = va_arg(args, void *);
+
+    if (!p)
+        return (_printf("(nil)"));
+
+    return (_printf("0x%lx", (unsigned long)p));
+}
